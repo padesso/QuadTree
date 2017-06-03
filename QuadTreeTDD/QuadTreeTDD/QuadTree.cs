@@ -8,10 +8,12 @@ namespace QuadTreeTDD
 {
     public class QuadTree
     {
-        const int NODE_CAPACITY = int.MaxValue;
+        //const int NODE_CAPACITY = int.MaxValue;
 
         private AxisAlignedBoundingBox bounds;
-        private List<Vector> positions = new List<Vector>(NODE_CAPACITY);
+        //private List<Vector> positions = new List<Vector>(NODE_CAPACITY);
+
+        private Vector position;
 
         private QuadTree northWest;
         private QuadTree northEast;
@@ -28,20 +30,22 @@ namespace QuadTreeTDD
         /// </summary>
         private void Subdivide()
         {
+            //TODO: fix this!
             northWest = new QuadTree(
-                new AxisAlignedBoundingBox(new Vector(0.5f * bounds.CenterPoint.X, 0.5f * bounds.CenterPoint.Y), 
+                new AxisAlignedBoundingBox(new Vector(bounds.CenterPoint.X - 0.5f * bounds.HalfWidth, bounds.CenterPoint.Y - 0.5f * bounds.HalfHeight), 
                     bounds.HalfWidth, bounds.HalfHeight));
 
             northEast = new QuadTree(
-                new AxisAlignedBoundingBox(new Vector(bounds.CenterPoint.X + 0.5f * bounds.CenterPoint.X, 0.5f * bounds.CenterPoint.Y),
+                new AxisAlignedBoundingBox(new Vector(bounds.CenterPoint.X + 0.5f * bounds.HalfWidth, bounds.CenterPoint.Y - 0.5f * bounds.HalfHeight),
                     bounds.HalfWidth, bounds.HalfHeight));
 
             southWest = new QuadTree(
-                new AxisAlignedBoundingBox(new Vector(0.5f * bounds.CenterPoint.X, bounds.CenterPoint.Y + 0.5f * bounds.CenterPoint.Y),
+                new AxisAlignedBoundingBox(new Vector(bounds.CenterPoint.X - 0.5f * bounds.HalfWidth, bounds.CenterPoint.Y + 0.5f * bounds.HalfHeight),
                     bounds.HalfWidth, bounds.HalfHeight));
 
             southEast = new QuadTree(
-                new AxisAlignedBoundingBox(new Vector(bounds.CenterPoint.X + 0.5f * bounds.CenterPoint.X, bounds.CenterPoint.Y + 0.5f * bounds.CenterPoint.Y), bounds.HalfWidth, bounds.HalfHeight));
+                new AxisAlignedBoundingBox(new Vector(bounds.CenterPoint.X + 0.5f * bounds.HalfWidth, bounds.CenterPoint.Y + 0.5f * bounds.HalfHeight),
+                bounds.HalfWidth, bounds.HalfHeight));
         }
 
         /// <summary>
@@ -53,12 +57,12 @@ namespace QuadTreeTDD
         {
             // Ignore objects that do not belong in this quad tree
             if (!this.bounds.Contains(position))
-                return false; // object cannot be added
+                return false; // object cannot be added to this quad
 
-            // If there is space in this quad tree, add the object here
-            if (positions.Count < NODE_CAPACITY)
+            //If the quad is not full, fill it
+            if (this.position == null)
             {
-                positions.Add(position);
+                this.position = position;
                 return true;
             }
 
@@ -66,11 +70,18 @@ namespace QuadTreeTDD
             if (northWest == null)
                 Subdivide();
 
-            if (northWest.Insert(position)) return true;
-            if (northEast.Insert(position)) return true;
-            if (southWest.Insert(position)) return true;
-            if (southEast.Insert(position)) return true;
+            if (northWest.Insert(position))
+                return true;
 
+            if (northEast.Insert(position))
+                return true;
+
+            if (southWest.Insert(position))
+                return true;
+
+            if (southEast.Insert(position))
+                return true;
+            
             // Otherwise, the point cannot be inserted for some unknown reason (this should never happen)
             return false;
         }        
@@ -86,25 +97,28 @@ namespace QuadTreeTDD
             
             //Get out early if the bounds passed isn't in this quad (or a child quad)
             if (!this.bounds.Intersect(bounds))
-                return positionsInBounds; 
+                return positionsInBounds;
 
-            // Check objects at this quad level
-            for (int positionIndex = 0; positionIndex < positions.Count; positionIndex++)
-            {
-                if (bounds.Contains(positions[positionIndex]))
-                    positionsInBounds.Add(this.positions[positionIndex]);
-            }
+            if (bounds.Contains(this.position))
+                positionsInBounds.Add(this.position);
 
-            // Terminate here, if there are no children
-            // We only need to check on since the subdivide method instantiates all sub-quads
+            // Terminate here, if there are no children (external node)
+            // We only need to check one since the subdivide method instantiates all sub-quads
             if (northWest == null)
                 return positionsInBounds;
 
-            // Otherwise, add the points from the children
-            positionsInBounds.Concat(northWest.QueryBounds(bounds));
-            positionsInBounds.Concat(northEast.QueryBounds(bounds));
-            positionsInBounds.Concat(southWest.QueryBounds(bounds));
-            positionsInBounds.Concat(southEast.QueryBounds(bounds));
+            // Otherwise, add the positions from the children
+            if(northWest.position != null)
+                positionsInBounds.AddRange(northWest.QueryBounds(bounds));
+
+            if (northEast.position != null)
+                positionsInBounds.AddRange(northEast.QueryBounds(bounds));
+
+            if (southWest.position != null)
+                positionsInBounds.AddRange(southWest.QueryBounds(bounds));
+
+            if (southEast.position != null)
+                positionsInBounds.AddRange(southEast.QueryBounds(bounds));
             
             return positionsInBounds;
         }

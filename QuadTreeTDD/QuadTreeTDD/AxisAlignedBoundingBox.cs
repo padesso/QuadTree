@@ -50,8 +50,11 @@ namespace QuadTreeTDD
         /// <returns>A bool based on if the AABB's in question intersect.</returns>
         public bool Intersect(AxisAlignedBoundingBox bounds)
         {
-            return (Math.Abs(this.centerPoint.X - bounds.centerPoint.X) * 2 < (this.Width + bounds.Width)) &&
-                   (Math.Abs(this.centerPoint.Y - bounds.centerPoint.Y) * 2 < (this.Height + bounds.Height));
+            if (this.CenterPoint.X + this.HalfWidth < bounds.CenterPoint.X - bounds.HalfWidth) return false; // left
+            if (this.CenterPoint.X - this.HalfWidth > bounds.CenterPoint.X + bounds.HalfWidth) return false; // right
+            if (this.CenterPoint.Y + this.HalfHeight < bounds.CenterPoint.Y - bounds.HalfHeight) return false; // above
+            if (this.CenterPoint.Y - this.HalfHeight > bounds.CenterPoint.Y + bounds.HalfHeight) return false; // below
+            return true; // overlap
         }
     }
 }
