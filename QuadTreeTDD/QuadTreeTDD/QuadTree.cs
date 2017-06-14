@@ -117,9 +117,6 @@ namespace QuadTreeTDD
             if (!this.Bounds.Intersect(bounds))
                 return positionsInBounds;
 
-            //if (bounds.Contains(this.Position))
-            //    positionsInBounds.Add(this.Position);
-
             // Terminate here, if there are no children (external node)
             // We only need to check one since the subdivide method instantiates all sub-quads
             if (this.Position != null && NorthWest == null)

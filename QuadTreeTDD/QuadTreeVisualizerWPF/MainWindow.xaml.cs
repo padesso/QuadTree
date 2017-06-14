@@ -30,7 +30,6 @@ namespace QuadTreeVisualizerWPF
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            //TODO: update this upon resize
             AxisAlignedBoundingBox outerBounds = new AxisAlignedBoundingBox(
                 new QuadTreeTDD.Vector((float)VisualizerCanvas.ActualWidth / 2.0f, (float)VisualizerCanvas.ActualHeight / 2.0f), (float)VisualizerCanvas.ActualWidth, 
                 (float)VisualizerCanvas.ActualHeight);
@@ -43,13 +42,6 @@ namespace QuadTreeVisualizerWPF
                 QuadTreeTDD.Vector tempPos = new QuadTreeTDD.Vector(rand.Next(0, (int)VisualizerCanvas.ActualWidth), rand.Next(0, (int)VisualizerCanvas.ActualHeight));
                 quadTree.Insert(tempPos);
             }
-
-            //QuadTreeTDD.Vector testVec1 = new QuadTreeTDD.Vector(35, 35);
-            //quadTree.Insert(testVec1);
-            //QuadTreeTDD.Vector testVec2 = new QuadTreeTDD.Vector(45, 45);
-            //quadTree.Insert(testVec2);
-            //QuadTreeTDD.Vector testVec3 = new QuadTreeTDD.Vector(255, 255);
-            //quadTree.Insert(testVec3);
 
             DrawQuadTreeBounds(quadTree);
             DrawQuadTreePositions(quadTree);
@@ -104,6 +96,37 @@ namespace QuadTreeVisualizerWPF
 
             if (quad.SouthEast != null)
                 DrawQuadTreeBounds(quad.SouthEast);
+        }
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            //Escape if there is no quad
+            if (quadTree == null)
+                return;
+
+            //Clear the old canvas state
+            VisualizerCanvas.Children.Clear();
+
+            //Get all the points so we can re-insert after the resize
+            List<QuadTreeTDD.Vector> allPositions = quadTree.QueryBounds(quadTree.Bounds);
+
+            //Get the new size
+            AxisAlignedBoundingBox newBounds = new AxisAlignedBoundingBox(
+                new QuadTreeTDD.Vector((float)VisualizerCanvas.ActualWidth / 2.0f, (float)VisualizerCanvas.ActualHeight / 2.0f), (float)VisualizerCanvas.ActualWidth,
+                (float)VisualizerCanvas.ActualHeight);
+
+            //Recreate the QuadTree with the new window size
+            quadTree = new QuadTree(newBounds);
+
+            //Re-insert the positions
+            foreach(QuadTreeTDD.Vector pos in allPositions)
+            {
+                quadTree.Insert(pos);
+            }
+
+            //Redraw
+            DrawQuadTreeBounds(quadTree);
+            DrawQuadTreePositions(quadTree);
         }
     }
 }
