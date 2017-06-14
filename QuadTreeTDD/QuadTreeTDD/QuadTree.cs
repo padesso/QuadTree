@@ -22,7 +22,7 @@ namespace QuadTreeTDD
 
         public QuadTree(AxisAlignedBoundingBox bounds)
         {
-            this.bounds = bounds;           
+            this.Bounds = bounds;           
         }
 
         /// <summary>
@@ -30,22 +30,21 @@ namespace QuadTreeTDD
         /// </summary>
         private void Subdivide()
         {
-            //TODO: fix this!
-            northWest = new QuadTree(
-                new AxisAlignedBoundingBox(new Vector(bounds.CenterPoint.X - 0.5f * bounds.HalfWidth, bounds.CenterPoint.Y - 0.5f * bounds.HalfHeight), 
-                    bounds.HalfWidth, bounds.HalfHeight));
+            NorthWest = new QuadTree(
+                new AxisAlignedBoundingBox(new Vector(Bounds.CenterPoint.X - 0.5f * Bounds.HalfWidth, Bounds.CenterPoint.Y - 0.5f * Bounds.HalfHeight), 
+                    Bounds.HalfWidth, Bounds.HalfHeight));
 
-            northEast = new QuadTree(
-                new AxisAlignedBoundingBox(new Vector(bounds.CenterPoint.X + 0.5f * bounds.HalfWidth, bounds.CenterPoint.Y - 0.5f * bounds.HalfHeight),
-                    bounds.HalfWidth, bounds.HalfHeight));
+            NorthEast = new QuadTree(
+                new AxisAlignedBoundingBox(new Vector(Bounds.CenterPoint.X + 0.5f * Bounds.HalfWidth, Bounds.CenterPoint.Y - 0.5f * Bounds.HalfHeight),
+                    Bounds.HalfWidth, Bounds.HalfHeight));
 
-            southWest = new QuadTree(
-                new AxisAlignedBoundingBox(new Vector(bounds.CenterPoint.X - 0.5f * bounds.HalfWidth, bounds.CenterPoint.Y + 0.5f * bounds.HalfHeight),
-                    bounds.HalfWidth, bounds.HalfHeight));
+            SouthWest = new QuadTree(
+                new AxisAlignedBoundingBox(new Vector(Bounds.CenterPoint.X - 0.5f * Bounds.HalfWidth, Bounds.CenterPoint.Y + 0.5f * Bounds.HalfHeight),
+                    Bounds.HalfWidth, Bounds.HalfHeight));
 
-            southEast = new QuadTree(
-                new AxisAlignedBoundingBox(new Vector(bounds.CenterPoint.X + 0.5f * bounds.HalfWidth, bounds.CenterPoint.Y + 0.5f * bounds.HalfHeight),
-                bounds.HalfWidth, bounds.HalfHeight));
+            SouthEast = new QuadTree(
+                new AxisAlignedBoundingBox(new Vector(Bounds.CenterPoint.X + 0.5f * Bounds.HalfWidth, Bounds.CenterPoint.Y + 0.5f * Bounds.HalfHeight),
+                Bounds.HalfWidth, Bounds.HalfHeight));
         }
 
         /// <summary>
@@ -56,33 +55,33 @@ namespace QuadTreeTDD
         public bool Insert(Vector position)
         {
             // Ignore objects that do not belong in this quad tree
-            if (!this.bounds.Contains(position))
+            if (!this.Bounds.Contains(position))
                 return false; // object cannot be added to this quad
 
             //If the quad is not full, fill it
-            if (this.position == null)
+            if (this.Position == null)
             {
-                this.position = position;
+                this.Position = position;
                 return true;
             }
 
             // Otherwise, subdivide and then add the point to whichever node will accept it
-            if (northWest == null)
+            if (NorthWest == null)
                 Subdivide();
 
-            if (northWest.Insert(position))
+            if (NorthWest.Insert(position))
                 return true;
 
-            if (northEast.Insert(position))
+            if (NorthEast.Insert(position))
                 return true;
 
-            if (southWest.Insert(position))
+            if (SouthWest.Insert(position))
                 return true;
 
-            if (southEast.Insert(position))
+            if (SouthEast.Insert(position))
                 return true;
             
-            // Otherwise, the point cannot be inserted for some unknown reason (this should never happen)
+            // The point cannot be inserted for  unknown reasons (how did we get here?
             return false;
         }        
 
@@ -96,31 +95,54 @@ namespace QuadTreeTDD
             List<Vector> positionsInBounds = new List<Vector>();
             
             //Get out early if the bounds passed isn't in this quad (or a child quad)
-            if (!this.bounds.Intersect(bounds))
+            if (!this.Bounds.Intersect(bounds))
                 return positionsInBounds;
 
-            if (bounds.Contains(this.position))
-                positionsInBounds.Add(this.position);
+            if (bounds.Contains(this.Position))
+                positionsInBounds.Add(this.Position);
 
             // Terminate here, if there are no children (external node)
             // We only need to check one since the subdivide method instantiates all sub-quads
-            if (northWest == null)
+            if (NorthWest == null)
                 return positionsInBounds;
 
             // Otherwise, add the positions from the children
-            if(northWest.position != null)
-                positionsInBounds.AddRange(northWest.QueryBounds(bounds));
+            if(NorthWest.Position != null)
+                positionsInBounds.AddRange(NorthWest.QueryBounds(bounds));
 
-            if (northEast.position != null)
-                positionsInBounds.AddRange(northEast.QueryBounds(bounds));
+            if (NorthEast.Position != null)
+                positionsInBounds.AddRange(NorthEast.QueryBounds(bounds));
 
-            if (southWest.position != null)
-                positionsInBounds.AddRange(southWest.QueryBounds(bounds));
+            if (SouthWest.Position != null)
+                positionsInBounds.AddRange(SouthWest.QueryBounds(bounds));
 
-            if (southEast.position != null)
-                positionsInBounds.AddRange(southEast.QueryBounds(bounds));
+            if (SouthEast.Position != null)
+                positionsInBounds.AddRange(SouthEast.QueryBounds(bounds));
             
             return positionsInBounds;
+        }
+
+        public QuadTree NorthWest { get => northWest; set => northWest = value; }
+        public QuadTree NorthEast { get => northEast; set => northEast = value; }
+        public QuadTree SouthWest { get => southWest; set => southWest = value; }
+        public QuadTree SouthEast { get => southEast; set => southEast = value; }
+        public Vector Position { get => position; set => position = value; }
+        public AxisAlignedBoundingBox Bounds { get => bounds; set => bounds = value; }
+
+        public QuadTree FindQuad(Vector pos)
+        {
+            if (Position == pos)
+                return this;
+
+            //TODO: recursively traverse tree to find matching quads
+
+            return null;
+        }
+
+        public bool DeletePosition(Vector pos)
+        {
+            //TODO: find the first (?) position that matches, deleted it and shift the tree upwardB 
+            return true;
         }
     }
 }

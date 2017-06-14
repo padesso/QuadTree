@@ -19,6 +19,7 @@ namespace QuadTreeTDD
             this.height = height;
         }
 
+        public Vector TopLeft { get => new Vector(centerPoint.X - HalfWidth, centerPoint.Y - HalfHeight); }
         public Vector CenterPoint { get => centerPoint; set => centerPoint = value; }
         public float Width { get => width; set => width = value; }
         public float Height { get => height; set => height = value; }
@@ -33,7 +34,6 @@ namespace QuadTreeTDD
         /// <returns>Bool based on whether position vector is within the AABB.</returns>
         public bool Contains(Vector position)
         {
-            //TODO: should this account for floating point errors?
             if (position.X >= (this.centerPoint.X - HalfWidth) &&
                 position.X < (this.centerPoint.X + HalfWidth) &&
                 position.Y >= (this.centerPoint.Y - HalfHeight) &&

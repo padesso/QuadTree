@@ -18,14 +18,14 @@ namespace QuadTreeTDD
             //tree.Insert(tempVect1);
 
             Random rand = new Random(DateTime.Now.Millisecond);
-            for (int vectorIndex = 0; vectorIndex < 50000; vectorIndex++)
+            for (int vectorIndex = 0; vectorIndex < 50; vectorIndex++)
             {
-                Vector tempVect = new Vector(rand.Next(0, 100), rand.Next(0, 100));
+                Vector tempVect = new Vector(rand.Next(50, 50), rand.Next(50, 50));
                 if (!tree.Insert(tempVect))
                     Console.WriteLine("Insert Failed");
             }
                         
-            List<Vector> allPositions = tree.QueryBounds(new AxisAlignedBoundingBox(new Vector(25, 25), 50, 50));
+            List<Vector> results = tree.QueryBounds(new AxisAlignedBoundingBox(new Vector(50, 50), 50, 50));
 
             //Tight main loop - Escape key quits
             do
