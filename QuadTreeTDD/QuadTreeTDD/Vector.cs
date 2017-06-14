@@ -1,4 +1,4 @@
-﻿namespace QuadTreeTDD
+﻿namespace QuadTreeLib
 {
     public class Vector
     {

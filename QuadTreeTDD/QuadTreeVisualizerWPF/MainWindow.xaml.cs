@@ -1,4 +1,4 @@
-﻿using QuadTreeTDD;
+﻿using QuadTreeLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,10 +36,10 @@ namespace QuadTreeVisualizerWPF
         private void DrawQuadTreePositions(QuadTree quad)
         {
             //Get all the points
-            List<QuadTreeTDD.Vector> allPositions = quad.ToList();
+            List<QuadTreeLib.Vector> allPositions = quad.ToList();
 
             //Draw the points
-            foreach (QuadTreeTDD.Vector pos in allPositions)
+            foreach (QuadTreeLib.Vector pos in allPositions)
             {
                 Ellipse ellipse = new Ellipse
                 {
@@ -92,18 +92,18 @@ namespace QuadTreeVisualizerWPF
             VisualizerCanvas.Children.Clear();
 
             //Get all the points so we can re-insert after the resize
-            List<QuadTreeTDD.Vector> allPositions = quadTree.ToList();
+            List<QuadTreeLib.Vector> allPositions = quadTree.ToList();
 
             //Get the new size
             AxisAlignedBoundingBox newBounds = new AxisAlignedBoundingBox(
-                new QuadTreeTDD.Vector((float)VisualizerCanvas.ActualWidth / 2.0f, (float)VisualizerCanvas.ActualHeight / 2.0f), (float)VisualizerCanvas.ActualWidth,
+                new QuadTreeLib.Vector((float)VisualizerCanvas.ActualWidth / 2.0f, (float)VisualizerCanvas.ActualHeight / 2.0f), (float)VisualizerCanvas.ActualWidth,
                 (float)VisualizerCanvas.ActualHeight);
 
             //Recreate the QuadTree with the new window size
             quadTree = new QuadTree(newBounds);
 
             //Re-insert the positions
-            foreach(QuadTreeTDD.Vector pos in allPositions)
+            foreach(QuadTreeLib.Vector pos in allPositions)
             {
                 quadTree.Insert(pos);
             }
@@ -128,7 +128,7 @@ namespace QuadTreeVisualizerWPF
 
             //Create a new quad tree with the current bounds of the canvas
             AxisAlignedBoundingBox outerBounds = new AxisAlignedBoundingBox(
-                new QuadTreeTDD.Vector((float)VisualizerCanvas.ActualWidth / 2.0f, (float)VisualizerCanvas.ActualHeight / 2.0f), (float)VisualizerCanvas.ActualWidth,
+                new QuadTreeLib.Vector((float)VisualizerCanvas.ActualWidth / 2.0f, (float)VisualizerCanvas.ActualHeight / 2.0f), (float)VisualizerCanvas.ActualWidth,
                 (float)VisualizerCanvas.ActualHeight);
 
             quadTree = new QuadTree(outerBounds);
@@ -137,7 +137,7 @@ namespace QuadTreeVisualizerWPF
             Random rand = new Random(DateTime.Now.Millisecond);
             for (int posIndex = 0; posIndex < 50; posIndex++)
             {
-                QuadTreeTDD.Vector tempPos = new QuadTreeTDD.Vector(rand.Next(0, (int)VisualizerCanvas.ActualWidth), rand.Next(0, (int)VisualizerCanvas.ActualHeight));
+                QuadTreeLib.Vector tempPos = new QuadTreeLib.Vector(rand.Next(0, (int)VisualizerCanvas.ActualWidth), rand.Next(0, (int)VisualizerCanvas.ActualHeight));
                 quadTree.Insert(tempPos);
             }
 

@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using QuadTreeTDD;
+using QuadTreeLib;
 using System.Collections.Generic;
 
 namespace QuadTreeTestProject
