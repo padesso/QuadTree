@@ -56,7 +56,7 @@ namespace QuadTreeVisualizerWPF
 
         private void DrawQuadTreeBounds(QuadTree quad)
         {
-            //Draw the bounding rectanlges
+            //Draw the bounding rectangles
             Rectangle rect = new Rectangle
             {
                 StrokeThickness = 1,
