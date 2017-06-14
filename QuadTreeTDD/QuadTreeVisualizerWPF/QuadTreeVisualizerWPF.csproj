@@ -94,9 +94,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\QuadTreeTDD\QuadTreeTDD.csproj">
+    <ProjectReference Include="..\QuadTreeTDD\QuadTreeLib.csproj">
       <Project>{1651d41e-414c-42e7-aee5-aa04593f3063}</Project>
-      <Name>QuadTreeTDD</Name>
+      <Name>QuadTreeLib</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

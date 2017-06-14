@@ -7,12 +7,9 @@ using System.Threading.Tasks;
 namespace QuadTreeTDD
 {
     public class QuadTree
-    {
-        //const int NODE_CAPACITY = int.MaxValue;
-
+    {       
         private AxisAlignedBoundingBox bounds;
-        //private List<Vector> positions = new List<Vector>(NODE_CAPACITY);
-
+ 
         private Vector position;
 
         private QuadTree northWest;
@@ -102,7 +99,36 @@ namespace QuadTreeTDD
             
             // The point cannot be inserted for  unknown reasons (how did we get here?
             return false;
-        }        
+        }
+
+        /// <summary>
+        /// Removes the first position from the quad tree at the position passed.
+        /// </summary>
+        /// <param name="pos">The position to be removed.</param>
+        /// <returns>A true indicates a position was successfully removed.</returns>
+        public bool Delete(Vector pos)
+        {
+            //TODO: Optimize this...
+            List<Vector> allPositions = this.ToList();
+
+            if (allPositions.Remove(pos))
+            {
+                Position = null;
+                NorthWest = null;
+                NorthEast = null;
+                SouthWest = null;
+                SouthEast = null;
+
+                foreach(Vector position in allPositions)
+                {
+                    Insert(position);
+                }
+
+                return true;
+            }
+
+            return false;
+        }
 
         /// <summary>
         /// Find all points within an axis aligned bounding box.
@@ -141,27 +167,16 @@ namespace QuadTreeTDD
             return positionsInBounds;
         }
 
+        public List<Vector> ToList()
+        {
+            return this.QueryBounds(this.Bounds);
+        }
+
         public QuadTree NorthWest { get => northWest; set => northWest = value; }
         public QuadTree NorthEast { get => northEast; set => northEast = value; }
         public QuadTree SouthWest { get => southWest; set => southWest = value; }
         public QuadTree SouthEast { get => southEast; set => southEast = value; }
         public Vector Position { get => position; set => position = value; }
         public AxisAlignedBoundingBox Bounds { get => bounds; set => bounds = value; }
-
-        public QuadTree FindQuad(Vector pos)
-        {
-            if (Position == pos)
-                return this;
-
-            //TODO: recursively traverse tree to find matching quads
-
-            return null;
-        }
-
-        public bool DeletePosition(Vector pos)
-        {
-            //TODO: find the first (?) position that matches, deleted it and shift the tree upwardB 
-            return true;
-        }
     }
 }

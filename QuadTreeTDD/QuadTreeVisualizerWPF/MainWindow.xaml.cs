@@ -36,12 +36,24 @@ namespace QuadTreeVisualizerWPF
 
             quadTree = new QuadTree(outerBounds);
 
-            Random rand = new Random(DateTime.Now.Millisecond);
-            for (int posIndex = 0; posIndex < 50; posIndex++)
-            {
-                QuadTreeTDD.Vector tempPos = new QuadTreeTDD.Vector(rand.Next(0, (int)VisualizerCanvas.ActualWidth), rand.Next(0, (int)VisualizerCanvas.ActualHeight));
-                quadTree.Insert(tempPos);
-            }
+            //Random rand = new Random(DateTime.Now.Millisecond);
+            //for (int posIndex = 0; posIndex < 50; posIndex++)
+            //{
+            //    QuadTreeTDD.Vector tempPos = new QuadTreeTDD.Vector(rand.Next(0, (int)VisualizerCanvas.ActualWidth), rand.Next(0, (int)VisualizerCanvas.ActualHeight));
+            //    quadTree.Insert(tempPos);
+            //}
+
+            QuadTreeTDD.Vector testVec = new QuadTreeTDD.Vector(25, 25);
+            quadTree.Insert(testVec);
+            QuadTreeTDD.Vector testVec1 = new QuadTreeTDD.Vector(45, 45);
+            quadTree.Insert(testVec1);
+            QuadTreeTDD.Vector testVec2 = new QuadTreeTDD.Vector(135, 135);
+            quadTree.Insert(testVec2);
+            QuadTreeTDD.Vector testVec3 = new QuadTreeTDD.Vector(235, 235);
+            quadTree.Insert(testVec3);
+
+            quadTree.Delete(testVec3);
+            quadTree.Delete(testVec);
 
             DrawQuadTreeBounds(quadTree);
             DrawQuadTreePositions(quadTree);
@@ -52,7 +64,7 @@ namespace QuadTreeVisualizerWPF
         private void DrawQuadTreePositions(QuadTree quad)
         {
             //Get all the points
-            List<QuadTreeTDD.Vector> allPositions = quad.QueryBounds(quad.Bounds);
+            List<QuadTreeTDD.Vector> allPositions = quad.ToList();
 
             //Draw the points
             foreach (QuadTreeTDD.Vector pos in allPositions)
@@ -108,7 +120,7 @@ namespace QuadTreeVisualizerWPF
             VisualizerCanvas.Children.Clear();
 
             //Get all the points so we can re-insert after the resize
-            List<QuadTreeTDD.Vector> allPositions = quadTree.QueryBounds(quadTree.Bounds);
+            List<QuadTreeTDD.Vector> allPositions = quadTree.ToList();
 
             //Get the new size
             AxisAlignedBoundingBox newBounds = new AxisAlignedBoundingBox(
