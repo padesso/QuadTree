@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QuadTreeVisualizerWPF"
         mc:Ignorable="d"
-        Title="QuadTree Visualizer" Height="600" Width="800" Loaded="Window_Loaded" SizeChanged="Window_SizeChanged">
+        Title="QuadTree Visualizer" Height="600" Width="800" Loaded="Window_Loaded" SizeChanged="Window_SizeChanged" KeyUp="Window_KeyUp">
     <Canvas Name="VisualizerCanvas">
         
         

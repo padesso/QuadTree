@@ -30,35 +30,7 @@ namespace QuadTreeVisualizerWPF
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            AxisAlignedBoundingBox outerBounds = new AxisAlignedBoundingBox(
-                new QuadTreeTDD.Vector((float)VisualizerCanvas.ActualWidth / 2.0f, (float)VisualizerCanvas.ActualHeight / 2.0f), (float)VisualizerCanvas.ActualWidth, 
-                (float)VisualizerCanvas.ActualHeight);
-
-            quadTree = new QuadTree(outerBounds);
-
-            //Random rand = new Random(DateTime.Now.Millisecond);
-            //for (int posIndex = 0; posIndex < 50; posIndex++)
-            //{
-            //    QuadTreeTDD.Vector tempPos = new QuadTreeTDD.Vector(rand.Next(0, (int)VisualizerCanvas.ActualWidth), rand.Next(0, (int)VisualizerCanvas.ActualHeight));
-            //    quadTree.Insert(tempPos);
-            //}
-
-            QuadTreeTDD.Vector testVec = new QuadTreeTDD.Vector(25, 25);
-            quadTree.Insert(testVec);
-            QuadTreeTDD.Vector testVec1 = new QuadTreeTDD.Vector(45, 45);
-            quadTree.Insert(testVec1);
-            QuadTreeTDD.Vector testVec2 = new QuadTreeTDD.Vector(135, 135);
-            quadTree.Insert(testVec2);
-            QuadTreeTDD.Vector testVec3 = new QuadTreeTDD.Vector(235, 235);
-            quadTree.Insert(testVec3);
-
-            quadTree.Delete(testVec3);
-            quadTree.Delete(testVec);
-
-            DrawQuadTreeBounds(quadTree);
-            DrawQuadTreePositions(quadTree);
-
-            Console.WriteLine("Wait");
+            Randomize();
         }
 
         private void DrawQuadTreePositions(QuadTree quad)
@@ -134,6 +106,39 @@ namespace QuadTreeVisualizerWPF
             foreach(QuadTreeTDD.Vector pos in allPositions)
             {
                 quadTree.Insert(pos);
+            }
+
+            //Redraw
+            DrawQuadTreeBounds(quadTree);
+            DrawQuadTreePositions(quadTree);
+        }
+
+        private void Window_KeyUp(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.R)
+            {
+                Randomize();
+            }
+        }
+
+        private void Randomize()
+        {
+            //Clear the old canvas state
+            VisualizerCanvas.Children.Clear();
+
+            //Create a new quad tree with the current bounds of the canvas
+            AxisAlignedBoundingBox outerBounds = new AxisAlignedBoundingBox(
+                new QuadTreeTDD.Vector((float)VisualizerCanvas.ActualWidth / 2.0f, (float)VisualizerCanvas.ActualHeight / 2.0f), (float)VisualizerCanvas.ActualWidth,
+                (float)VisualizerCanvas.ActualHeight);
+
+            quadTree = new QuadTree(outerBounds);
+
+            //Insert random data into the quad tree
+            Random rand = new Random(DateTime.Now.Millisecond);
+            for (int posIndex = 0; posIndex < 50; posIndex++)
+            {
+                QuadTreeTDD.Vector tempPos = new QuadTreeTDD.Vector(rand.Next(0, (int)VisualizerCanvas.ActualWidth), rand.Next(0, (int)VisualizerCanvas.ActualHeight));
+                quadTree.Insert(tempPos);
             }
 
             //Redraw
