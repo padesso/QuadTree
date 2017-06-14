@@ -58,17 +58,36 @@ namespace QuadTreeTDD
             if (!this.Bounds.Contains(position))
                 return false; // object cannot be added to this quad
 
-            //If the quad is not full, fill it
-            if (this.Position == null)
+            //If the quad is not full and it is an external node, fill it
+            if (this.Position == null && NorthWest == null)
             {
                 this.Position = position;
                 return true;
             }
-
-            // Otherwise, subdivide and then add the point to whichever node will accept it
+            
+            // Otherwise, subdivide and shift down current position.
             if (NorthWest == null)
                 Subdivide();
 
+            //Shift down the current position as this is now an internal node
+            if (NorthWest.Insert(this.Position))
+            {
+                this.Position = null;
+            }
+            else if (NorthEast.Insert(this.Position))
+            {
+                this.Position = null;
+            }
+            else if (SouthWest.Insert(this.Position))
+            {
+                this.Position = null;
+            }
+            else if (SouthEast.Insert(this.Position))
+            {
+                this.Position = null;
+            }
+
+            //Attempt to insert new node
             if (NorthWest.Insert(position))
                 return true;
 
@@ -98,25 +117,28 @@ namespace QuadTreeTDD
             if (!this.Bounds.Intersect(bounds))
                 return positionsInBounds;
 
-            if (bounds.Contains(this.Position))
-                positionsInBounds.Add(this.Position);
+            //if (bounds.Contains(this.Position))
+            //    positionsInBounds.Add(this.Position);
 
             // Terminate here, if there are no children (external node)
             // We only need to check one since the subdivide method instantiates all sub-quads
-            if (NorthWest == null)
+            if (this.Position != null && NorthWest == null)
+            {
+                positionsInBounds.Add(this.Position);
                 return positionsInBounds;
+            }
 
             // Otherwise, add the positions from the children
-            if(NorthWest.Position != null)
+            if(NorthWest != null)
                 positionsInBounds.AddRange(NorthWest.QueryBounds(bounds));
 
-            if (NorthEast.Position != null)
+            if (NorthEast != null)
                 positionsInBounds.AddRange(NorthEast.QueryBounds(bounds));
 
-            if (SouthWest.Position != null)
+            if (SouthWest != null)
                 positionsInBounds.AddRange(SouthWest.QueryBounds(bounds));
 
-            if (SouthEast.Position != null)
+            if (SouthEast != null)
                 positionsInBounds.AddRange(SouthEast.QueryBounds(bounds));
             
             return positionsInBounds;

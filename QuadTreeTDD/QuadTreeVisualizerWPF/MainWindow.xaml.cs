@@ -37,20 +37,18 @@ namespace QuadTreeVisualizerWPF
 
             quadTree = new QuadTree(outerBounds);
 
-            //Random rand = new Random(DateTime.Now.Millisecond);
-            //for(int posIndex = 0; posIndex < 5; posIndex++)
-            //{
-            //    QuadTreeTDD.Vector tempPos = new QuadTreeTDD.Vector(rand.Next(0, (int)VisualizerCanvas.ActualWidth), rand.Next(0, (int)VisualizerCanvas.ActualHeight));
-            //    quadTree.Insert(tempPos);
-            //}
+            Random rand = new Random(DateTime.Now.Millisecond);
+            for (int posIndex = 0; posIndex < 50; posIndex++)
+            {
+                QuadTreeTDD.Vector tempPos = new QuadTreeTDD.Vector(rand.Next(0, (int)VisualizerCanvas.ActualWidth), rand.Next(0, (int)VisualizerCanvas.ActualHeight));
+                quadTree.Insert(tempPos);
+            }
 
-            //TODO: Positions are being added to a parent then as a child but should the position
-            //be shifted down the tree so both positions are children?
-            QuadTreeTDD.Vector testVec1 = new QuadTreeTDD.Vector(35, 35);
-            quadTree.Insert(testVec1);
-            QuadTreeTDD.Vector testVec2 = new QuadTreeTDD.Vector(45, 45);
-            quadTree.Insert(testVec2);
-            //QuadTreeTDD.Vector testVec3 = new QuadTreeTDD.Vector(55, 55);
+            //QuadTreeTDD.Vector testVec1 = new QuadTreeTDD.Vector(35, 35);
+            //quadTree.Insert(testVec1);
+            //QuadTreeTDD.Vector testVec2 = new QuadTreeTDD.Vector(45, 45);
+            //quadTree.Insert(testVec2);
+            //QuadTreeTDD.Vector testVec3 = new QuadTreeTDD.Vector(255, 255);
             //quadTree.Insert(testVec3);
 
             DrawQuadTreeBounds(quadTree);

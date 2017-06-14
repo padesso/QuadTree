@@ -34,6 +34,9 @@ namespace QuadTreeTDD
         /// <returns>Bool based on whether position vector is within the AABB.</returns>
         public bool Contains(Vector position)
         {
+            if (position == null)
+                return false;
+
             if (position.X >= (this.centerPoint.X - HalfWidth) &&
                 position.X < (this.centerPoint.X + HalfWidth) &&
                 position.Y >= (this.centerPoint.Y - HalfHeight) &&
